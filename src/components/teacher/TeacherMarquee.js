@@ -107,11 +107,20 @@ export default function TeacherMarquee() {
       {/* Header */}
       <div ref={headerRef} className="text-center mb-16 md:mb-20 px-4">
         <h3 className="marquee-subtitle opacity-0 text-[0.65rem] md:text-xs font-bold tracking-[0.2em] text-neutral-500 uppercase mb-4 md:mb-6">
-          Trusted Partner
+         Teacher Training Course
         </h3>
         <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-neutral-900 leading-[1.1]">
-          <span className="marquee-title-line block opacity-0">Building long-term success</span>
-          <span className="marquee-title-line block opacity-0">through partnership</span>
+          <span className="marquee-title-line block opacity-0"> Early Childhood Care and Education</span>
+          <span className="marquee-title-line block opacity-0">Training Course</span>
+        </h2>
+      </div>
+      <div ref={headerRef} className="text-center mb-16 md:mb-20 px-4">
+        <h3 className="marquee-subtitle opacity-0 text-[0.65rem] md:text-xs font-bold tracking-[0.2em] text-neutral-500 uppercase mb-4 md:mb-6">
+         Teacher Training Course
+        </h3>
+        <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-neutral-900 leading-[1.1]">
+          <span className="marquee-title-line block opacity-0"> Early Childhood Care and Education</span>
+          <span className="marquee-title-line block opacity-0">Training Course</span>
         </h2>
       </div>
 
