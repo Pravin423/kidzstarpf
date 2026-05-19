@@ -9,32 +9,44 @@ import { useAdmissionModal } from "../../context/AdmissionModalContext";
 const STEPS = [
   {
     id: "01",
-    title: "Inquiry",
-    description: "Submit an online inquiry form or call us to schedule a campus tour.",
+    title: "Playgroup",
+    age: "2.5 - 3.5 Years",
+    days: "3 Days/Week",
+    period: "3.30hrs period",
+    description: "Sensory play, motor skill refinement, and interactive early socialization.",
     image: "/kimg1.png",
     rotation: -4,
     zIndex: 1
   },
   {
     id: "02",
-    title: "Campus Tour",
-    description: "Visit our colorful classrooms, meet our teachers, and explore our learning environments.",
+    title: "Nursery",
+    age: "2.5 - 4.5 Years",
+    days: "3 Days/Week",
+    period: "3.30hrs period",
+    description: "Early vocabulary, language stimulation, letter recognition, and creative storytelling.",
     image: "/kimg2.png",
     rotation: -2,
     zIndex: 2
   },
   {
     id: "03",
-    title: "Interaction",
-    description: "A brief friendly interaction with the child to evaluate their early readiness and developmental stage.",
+    title: "Jr.Kg",
+    age: "4.5 - 5.5 Years",
+    days: "3 Days/Week",
+    period: "3.30hrs period",
+    description: "Basic writing, math concepts, logic games, and cognitive puzzle solving.",
     image: "/kimg3.png",
     rotation: -1,
     zIndex: 4
   },
   {
     id: "04",
-    title: "Admission",
-    description: "Complete the documentation and enroll your child in one of our tailored programs.",
+    title: "Sr.Kg",
+    age: "5.5 - 6.5 Years",
+    days: "3 Days/Week",
+    period: "3.30hrs period",
+    description: "Advanced reading, arithmetic readiness, creative arts, and school preparation.",
     image: "/kimg4.png",
     rotation: -3,
     zIndex: 3
@@ -51,14 +63,14 @@ export default function ProcessSteps() {
         {/* Header */}
         <div className={styles.header}>
           <div className={styles.left}>
-            <span className={styles.tag}>OUR ADMISSION PROCESS</span>
+            <span className={styles.tag}>OUR CURRICULUM</span>
             <h2 className={styles.title}>
-              A simple, step-by-step journey to enroll your little star at KidzStar
+              A holistic learning framework tailored for early childhood development
             </h2>
           </div>
           <div className={styles.right}>
             <button onClick={openModal} className={`${styles.button} cursor-pointer`}>
-              Start Inquiry
+              Enroll Now
             </button>
           </div>
         </div>
@@ -91,6 +103,20 @@ export default function ProcessSteps() {
               </div>
               <div className={styles.content}>
                 <h3 className={styles.cardTitle}>{step.title}</h3>
+                
+                {/* Structured Badges */}
+                <div className="flex flex-wrap gap-1.5 mb-4">
+                  <span className="inline-block px-2.5 py-1 text-[0.72rem] font-bold tracking-tight rounded-md bg-[#F2F53E]/15 text-[#854D0E] border border-[#F2F53E]/30 font-sans">
+                    {step.age}
+                  </span>
+                  <span className="inline-block px-2.5 py-1 text-[0.72rem] font-bold tracking-tight rounded-md bg-[#D2F4F0]/30 text-[#0F766E] border border-[#D2F4F0]/65 font-sans">
+                    {step.days}
+                  </span>
+                  <span className="inline-block px-2.5 py-1 text-[0.72rem] font-bold tracking-tight rounded-md bg-neutral-100 text-neutral-600 border border-neutral-200 font-sans">
+                    {step.period}
+                  </span>
+                </div>
+
                 <p className={styles.description}>{step.description}</p>
                 <span className={styles.number}>{step.id}</span>
               </div>
