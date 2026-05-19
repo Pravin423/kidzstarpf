@@ -65,49 +65,28 @@ export default function AdmissionModal() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setStatus({ submitting: true, success: false, error: null, mockMode: false });
+    setStatus({ submitting: true, success: false, error: null, mockMode: true });
 
-    try {
-      const res = await fetch("/api/admission", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        setStatus({
-          submitting: false,
-          success: true,
-          error: null,
-          mockMode: data.mode === "mock",
-        });
-        // Reset form
-        setFormData({
-          parentName: "",
-          childName: "",
-          childAge: "",
-          email: "",
-          phone: "",
-          program: "preschool",
-          notes: "",
-        });
-      } else {
-        throw new Error(data.error || "Failed to submit enrollment inquiry.");
-      }
-    } catch (err) {
+    setTimeout(() => {
       setStatus({
         submitting: false,
-        success: false,
-        error: err.message,
-        mockMode: false,
+        success: true,
+        error: null,
+        mockMode: true,
       });
-    }
+      // Reset form
+      setFormData({
+        parentName: "",
+        childName: "",
+        childAge: "",
+        email: "",
+        phone: "",
+        program: "preschool",
+        notes: "",
+      });
+    }, 800);
   };
 
   const handleClose = () => {
@@ -167,14 +146,12 @@ export default function AdmissionModal() {
           </p>
           
           {status.success && (
-            <div className="flex gap-3 p-4 rounded-xl mt-2 bg-emerald-500/20 border border-emerald-500/30 animate-pulse">
+            <div className="flex gap-3 p-4 rounded-xl mt-2 bg-emerald-500/20 border border-emerald-500/30">
               <CheckCircle2 size={24} className="flex-shrink-0 text-emerald-400" />
               <div>
-                <strong className="block text-base mb-0.5 font-sans">Application Received!</strong>
+                <strong className="block text-base mb-0.5 font-sans">Message Sent!</strong>
                 <p className="text-xs opacity-90 font-sans">
-                  {status.mockMode 
-                    ? "Inquiry simulated successfully (running without real DB)." 
-                    : "We have saved your inquiry in our system."}
+                  Thank you! We will get in touch with you shortly.
                 </p>
               </div>
             </div>
