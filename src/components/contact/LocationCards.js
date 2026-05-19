@@ -4,24 +4,21 @@ import styles from "./LocationCards.module.css";
 const locations = [
   {
     id: 1,
-    image: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&q=80&w=1000", // SF
-    location: "1234 Market Street, Suite 500 San Francisco, CA 94103",
-    email: "info@example.com",
-    phone: "(888) 456 7891"
+    image: "/kimg1.png",
+    name: "Sawarkar Nagar Campus",
+    location: "Sawarkar Nagar, Thane, Maharashtra",
+    email: "kidzstarpreprimaryschool@gmail.com",
+    phone: "9321002881 / 9323331360",
+    mapUrl: "https://maps.app.goo.gl/PymMygndmGV5ndjM9"
   },
   {
     id: 2,
-    image: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&q=80&w=1000", // NY
-    location: "123 Green Avenue, New York, NY 10001, United States",
-    email: "info@example.com",
-    phone: "(888) 456 7892"
-  },
-  {
-    id: 3,
-    image: "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?auto=format&fit=crop&q=80&w=1000", // Singapore
-    location: "50 Raffles Place, #32-01, Singapore 048623",
-    email: "info@example.com",
-    phone: "(888) 456 7893"
+    image: "/kimg2.png",
+    name: "Indira Nagar Campus",
+    location: "Indira Nagar, Koparkhairane, Navi Mumbai",
+    email: "kidzstarpreprimaryschool@gmail.com",
+    phone: "7304344802",
+    mapUrl: "https://www.google.com/maps/search/?api=1&query=19.102029,73.000208"
   }
 ];
 
@@ -30,25 +27,42 @@ export default function LocationCards() {
     <section className={styles.section}>
       <div className={styles.container}>
         <h2 className={styles.heading}>
-          Get in touch with our team anytime for fast friendly and reliable services
+          Our Campuses
         </h2>
 
         <div className={styles.grid}>
           {locations.map((loc) => (
             <div key={loc.id} className={styles.card}>
-              <div className={styles.imageWrapper}>
+              <a 
+                href={loc.mapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`${styles.imageWrapper} block group relative overflow-hidden`}
+              >
                 <Image
                   src={loc.image}
-                  alt="Location"
+                  alt={loc.name}
                   fill
                   className={styles.image}
                 />
-              </div>
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center text-white font-bold text-sm gap-2 font-sans">
+                  <span>📍 View on Google Maps</span>
+                </div>
+              </a>
               
               <div className={styles.details}>
+                <h3 className="font-sans font-bold text-xl text-neutral-900 mb-1">{loc.name}</h3>
+
                 <div className={styles.detailGroup}>
                   <span className={styles.label}>Location</span>
-                  <p className={styles.text}>{loc.location}</p>
+                  <a 
+                    href={loc.mapUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline text-slate-800 hover:text-black transition-colors"
+                  >
+                    <p className={styles.text}>{loc.location}</p>
+                  </a>
                 </div>
 
                 <div className={styles.detailGroup}>
