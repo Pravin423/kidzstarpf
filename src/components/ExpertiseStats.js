@@ -101,7 +101,7 @@ export default function ExpertiseStats() {
           <div className="stats-card lg:col-span-5 h-full flex transition-all duration-500 ease-out hover:-translate-y-1">
             <div className="relative rounded-[32px] overflow-hidden w-full min-h-[420px] lg:min-h-full border border-black/5 shadow-[0_8px_30px_rgb(0,0,0,0.01)] flex-grow">
               <Image
-                src="https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&q=80&w=800"
+                src="/kimg5.png"
                 alt="KidzStar classroom learning"
                 fill
                 className="object-cover transition-transform duration-700 ease-out hover:scale-[1.02]"

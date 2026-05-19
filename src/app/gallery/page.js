@@ -1,4 +1,3 @@
-import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import Gallery from "../../components/gallery/Gallery";
 
@@ -19,11 +18,7 @@ export default function GalleryPage() {
         }}
       ></div>
 
-      <Navbar />
-
       <Gallery />
-      
-      
 
       <Footer />
     </main>

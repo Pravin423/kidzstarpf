@@ -14,20 +14,20 @@ export default function WhyChooseUs() {
   const items = [
     {
       number: "01",
-      title: "Proven industry experience",
-      description: "Our broad industry expertise helps us deliver practical strategies and measurable outcomes.",
+      title: "Holistic Play-Based Learning",
+      description: "We blend structured learning with creative play to spark imagination, curiosity, and early cognitive development.",
       image: "/kimg3.png",
     },
     {
       number: "02",
-      title: "Data-driven decision making",
-      description: "Our data-led approach improves performance and delivers measurable business gains.",
+      title: "Safe & Nurturing Environment",
+      description: "Our campus features childproof spaces, creative indoor/outdoor areas, and round-the-clock safety supervision.",
       image: "/kimg1.png",
     },
     {
       number: "03",
-      title: "Sustainable business growth",
-      description: "We design growth plans that strengthen results and ensure long-term value.",
+      title: "Dedicated & Passionate Teachers",
+      description: "Our certified early childhood educators focus on personalized care, fostering social confidence, and values.",
       image: "/kimg2.png",
     }
   ];

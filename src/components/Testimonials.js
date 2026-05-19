@@ -9,39 +9,39 @@ gsap.registerPlugin(ScrollTrigger);
 
 const TESTIMONIALS_DATA = [
   {
-    quote: "Encouraging young minds to explore numbers and shapes through interactive logic, playful counting, and visual puzzles.",
-    clientName: "Marcus Bell",
-    clientRole: "Specialist in Mathematics",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150&h=150"
+    quote: "KidzStar has been a second home for our daughter. The teachers are incredibly nurturing, and the play-based learning style helped her build immense confidence.",
+    clientName: "Sarah Jenkins",
+    clientRole: "Mother of Emily (Playgroup)",
+    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=150&h=150"
   },
   {
-    quote: "Nurturing creative self-expression in children using paints, open-ended materials, and sensory clay sculpting.",
-    clientName: "Wilson Arcand",
-    clientRole: "Specialist in Arts & Crafts",
+    quote: "We love the focus on safety, hygiene, and creative development. Our son runs to school every morning and comes home bubbling with excitement about his new friends.",
+    clientName: "Michael Chen",
+    clientRole: "Father of Leo (Nursery)",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150&h=150"
   },
   {
-    quote: "Building early confidence, language fluency, and a lifelong love of reading through phonics and interactive story circles.",
-    clientName: "Rayna Rhiel Madsen",
-    clientRole: "Specialist in Language & Phonics",
+    quote: "The language and phonics activities did wonders for our daughter's reading readiness. The storytelling circle is her absolute favorite part of the day!",
+    clientName: "Rayna Madsen",
+    clientRole: "Mother of Sofia (Junior KG)",
     avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=150&h=150"
   },
   {
-    quote: "Making physical coordination and movement a joyful adventure with interactive outdoor play and cooperative games.",
-    clientName: "Wilson Arcand Jr.",
-    clientRole: "Specialist in Physical Development",
-    avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=150&h=150"
+    quote: "Finding a preschool that truly balances physical activity with emotional development is rare. The team here is incredibly warm and highly professional.",
+    clientName: "Wilson Arcand",
+    clientRole: "Father of Lucas (Senior KG)",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150&h=150"
   },
   {
-    quote: "Unlocking early digital literacy and smart tech explorations with guided media tools and age-appropriate educational games.",
+    quote: "The interactive play areas are clean, colorful, and extremely safe. We appreciate the daily updates and close collaboration between teachers and parents.",
     clientName: "David Vance",
-    clientRole: "Specialist in Interactive Learning",
+    clientRole: "Father of Chloe (Toddler Care)",
     avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=150&h=150"
   },
   {
-    quote: "Supporting child growth, ensuring each explorer develops confidence, emotional safety, and independence.",
+    quote: "An outstanding preschool that fosters independent thinking and social skills. Our child has developed beautiful habits and a genuine love for learning.",
     clientName: "Melissa Duarte",
-    clientRole: "Specialist in Early Child Development",
+    clientRole: "Mother of Mateo (Nursery)",
     avatar: "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&q=80&w=150&h=150"
   }
 ];
@@ -116,10 +116,10 @@ export default function Testimonials() {
         {/* Centered Section Header */}
         <div className="header-trigger text-center mb-16 flex flex-col items-center">
           <span className="testimonial-header font-sans uppercase tracking-[0.25em] text-[0.8rem] font-bold text-slate-500 mb-4 block">
-            THE DREAM TEACHERS
+            PARENT REVIEWS
           </span>
           <h2 className="testimonial-header text-4xl sm:text-5xl font-bold leading-[1.15] tracking-tight text-neutral-900 max-w-3xl font-sans">
-            Dedicated Educators Nurturing Every Little Star
+            Love & Trust From KidzStar Families
           </h2>
         </div>
 

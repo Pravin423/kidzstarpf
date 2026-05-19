@@ -198,7 +198,7 @@ export default function OurServices() {
                   </div>
 
                   <Link 
-                    href="#contact" 
+                    href="/contact" 
                     className="flex items-center gap-1 text-neutral-900 font-bold text-[0.95rem] tracking-tight group w-max"
                   >
                     <span>Explore more</span>

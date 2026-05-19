@@ -4,37 +4,38 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./ProcessSteps.module.css";
+import { useAdmissionModal } from "../../context/AdmissionModalContext";
 
 const STEPS = [
   {
     id: "01",
-    title: "Assess",
-    description: "We evaluate your current performance, challenges, and growth opportunities.",
-    image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=600",
+    title: "Inquiry",
+    description: "Submit an online inquiry form or call us to schedule a campus tour.",
+    image: "/kimg1.png",
     rotation: -4,
     zIndex: 1
   },
   {
     id: "02",
-    title: "Strategize",
-    description: "We develop focused strategies aligned with your goals and growth.",
-    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=600",
+    title: "Campus Tour",
+    description: "Visit our colorful classrooms, meet our teachers, and explore our learning environments.",
+    image: "/kimg2.png",
     rotation: -2,
     zIndex: 2
   },
   {
     id: "03",
-    title: "Implement",
-    description: "We implement clear roadmaps to execute strategies effectively.",
-    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=600",
+    title: "Interaction",
+    description: "A brief friendly interaction with the child to evaluate their early readiness and developmental stage.",
+    image: "/kimg3.png",
     rotation: -1,
     zIndex: 4
   },
   {
     id: "04",
-    title: "Optimize",
-    description: "Ongoing optimization to strengthen results and long-term success.",
-    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80&w=600",
+    title: "Admission",
+    description: "Complete the documentation and enroll your child in one of our tailored programs.",
+    image: "/kimg4.png",
     rotation: -3,
     zIndex: 3
   }
@@ -42,6 +43,7 @@ const STEPS = [
 
 export default function ProcessSteps() {
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const { openModal } = useAdmissionModal();
 
   return (
     <div className={styles.section}>
@@ -49,15 +51,15 @@ export default function ProcessSteps() {
         {/* Header */}
         <div className={styles.header}>
           <div className={styles.left}>
-            <span className={styles.tag}>OUR CONSULTING PROCESS</span>
+            <span className={styles.tag}>OUR ADMISSION PROCESS</span>
             <h2 className={styles.title}>
-              A disciplined and data driven approach guiding businesses toward measurable impact
+              A simple, step-by-step journey to enroll your little star at KidzStar
             </h2>
           </div>
           <div className={styles.right}>
-            <Link href="#" className={styles.button}>
-              Drive better results
-            </Link>
+            <button onClick={openModal} className={`${styles.button} cursor-pointer`}>
+              Start Inquiry
+            </button>
           </div>
         </div>
 

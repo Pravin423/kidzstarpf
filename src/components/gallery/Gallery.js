@@ -6,12 +6,11 @@ import gsap from "gsap";
 import styles from "./Gallery.module.css";
 
 const galleryItems = [
-  { id: 1, src: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&q=80&w=1000", title: "Creative Playtime" },
-  { id: 2, src: "https://images.unsplash.com/photo-1540479859555-17af45c78602?auto=format&fit=crop&q=80&w=1000", title: "Learning Together" },
-  { id: 3, src: "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&q=80&w=1000", title: "Story Time" },
-  { id: 4, src: "https://images.unsplash.com/photo-1502086223501-7ea24c83afc3?auto=format&fit=crop&q=80&w=1000", title: "Outdoor Exploration" },
-  { id: 5, src: "https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&q=80&w=1000", title: "Art & Craft" },
-  { id: 6, src: "https://images.unsplash.com/photo-1564424224827-cd24b8915874?auto=format&fit=crop&q=80&w=1000", title: "Music & Dance" },
+  { id: 1, src: "/kimg1.png", title: "Creative Playtime" },
+  { id: 2, src: "/kimg2.png", title: "Learning Together" },
+  { id: 3, src: "/kimg3.png", title: "Story Time" },
+  { id: 4, src: "/kimg4.png", title: "Outdoor Exploration" },
+  { id: 5, src: "/kimg5.png", title: "Art & Craft" },
 ];
 
 export default function Gallery() {

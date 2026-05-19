@@ -33,12 +33,12 @@ export default function ProgramsList() {
       <div className={styles.container}>
         {/* Header */}
         <div className={styles.header}>
-          <span className={styles.tag}>SERVICE</span>
+          <span className={styles.tag}>PROGRAMS</span>
           <h1 className={styles.title}>
-            Expert services built for<br />measurable results
+            Creative learning programs<br />for a brighter future
           </h1>
           <p className={styles.subtitle}>
-            Our expert consulting services are designed to deliver practical strategies, clear execution plans, and measurable outcomes that strengthen performance.
+            Our pre-primary education programs are designed to inspire exploration, build confidence, and prepare your child for key developmental milestones.
           </p>
         </div>
       </div>
@@ -65,8 +65,8 @@ export default function ProgramsList() {
           {/* Image */}
           <div className={styles.imageWrapper}>
             <Image
-              src="https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=1200"
-              alt="Expert services"
+              src="/kimg4.png"
+              alt="Preschool Programs"
               fill
               className="object-cover"
               priority

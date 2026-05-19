@@ -7,9 +7,11 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import AvatarGroup from "./AvatarGroup";
 import GrowthCard from "./GrowthCard";
+import { useAdmissionModal } from "../../context/AdmissionModalContext";
 
 export default function AboutHero() {
   const sectionRef = useRef(null);
+  const { openModal } = useAdmissionModal();
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -74,34 +76,34 @@ export default function AboutHero() {
           <span className="hero-fade-item text-[0.65rem] font-bold uppercase tracking-[0.2em] text-gray-600 mb-6 block">
             ABOUT US
           </span>
-          <h1 className="hero-fade-item text-5xl sm:text-6xl lg:text-[4.2rem] font-medium text-black leading-[1.02] tracking-[-0.03em] mb-7">
-            Empowering<br />businesses to<br />grow smarter
+          <h1 className="hero-fade-item text-5xl sm:text-6xl lg:text-[4.2rem] font-bold text-black leading-[1.02] tracking-[-0.03em] mb-7">
+            Creative<br />Surroundings for a<br />Better Future
           </h1>
-          <p className="hero-fade-item text-[1.125rem] text-gray-600/90 leading-[1.65] font-normal mb-10 max-w-[480px]">
-            We lead with clear strategy and measure success by the results we deliver, enabling businesses to enhance performance and achieve sustainable long-term growth.
+          <p className="hero-fade-item text-[1.125rem] text-slate-600/90 leading-[1.65] font-medium mb-10 max-w-[480px]">
+            At KidzStar, we believe that children thrive in spaces that inspire discovery. Our child-centered approach merges structured play with creative exploration to build a solid foundation for early learning and growth.
           </p>
           
           <div className="hero-fade-item flex flex-wrap items-center gap-4">
             <Link 
-              href="#" 
-              className="relative inline-flex items-center justify-center h-[50px] px-8 rounded-full overflow-hidden font-medium text-[0.9rem] tracking-wide shadow-sm group transition-all duration-500 hover:scale-[1.04] active:scale-95 bg-black text-white hover:text-black hover:shadow-[0_8px_20px_rgba(132,251,65,0.2)] border border-white/10"
+              href="/programs" 
+              className="relative inline-flex items-center justify-center h-[50px] px-8 rounded-full overflow-hidden font-semibold text-[0.9rem] tracking-wide shadow-sm group transition-all duration-500 hover:scale-[1.04] active:scale-95 bg-black text-white hover:text-black hover:shadow-[0_8px_20px_rgba(132,251,65,0.2)] border border-white/10"
             >
               <span className="relative z-10 transition-colors duration-300">
-                Get started
+                Explore Programs
               </span>
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent -translate-x-full group-hover:opacity-0 transition-opacity duration-300 animate-shimmer pointer-events-none -z-10"></span>
               <span className="absolute w-[200px] h-[200px] bg-[#84FB41] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-0 group-hover:scale-100 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] -z-10 pointer-events-none"></span>
             </Link>
             
-            <Link 
-              href="#" 
-              className="relative inline-flex items-center justify-center h-[50px] px-8 rounded-full overflow-hidden font-medium text-[0.9rem] tracking-wide shadow-sm group transition-all duration-500 hover:scale-[1.04] active:scale-95 bg-white border border-gray-300 text-black hover:border-transparent hover:shadow-[0_8px_20px_rgba(132,251,65,0.2)]"
+            <button 
+              onClick={openModal} 
+              className="relative inline-flex items-center justify-center h-[50px] px-8 rounded-full overflow-hidden font-semibold text-[0.9rem] tracking-wide shadow-sm group transition-all duration-500 hover:scale-[1.04] active:scale-95 bg-white border border-gray-300 text-black hover:border-transparent hover:shadow-[0_8px_20px_rgba(132,251,65,0.2)] cursor-pointer"
             >
               <span className="relative z-10 transition-colors duration-300">
-                Speak with an advisor
+                Admission Inquiry
               </span>
               <span className="absolute w-[260px] h-[260px] bg-[#84FB41] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-0 group-hover:scale-100 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] -z-10 pointer-events-none"></span>
-            </Link>
+            </button>
           </div>
 
           <div className="hero-fade-item">
