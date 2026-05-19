@@ -2,6 +2,7 @@ import Image from "next/image";
 import Footer from "../../components/Footer";
 import TeacherSwiper from "../../components/teacher/TeacherSwiper";
 import TeacherHeroContent from "../../components/teacher/TeacherHeroContent";
+import TeacherMarquee from "../../components/teacher/TeacherMarquee";
 
 export const metadata = {
   title: "Our Teachers | KidzStar Preschool",
@@ -30,6 +31,9 @@ export default function TeacherPage() {
       <div className="relative z-10 w-full overflow-hidden">
         <TeacherSwiper />
       </div>
+
+      {/* Opposing Infinite Marquees Section */}
+      <TeacherMarquee />
 
       <div className="mt-12 md:mt-24 z-10 relative">
         <Footer />
