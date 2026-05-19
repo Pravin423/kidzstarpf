@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@theme {
+  /* Add Custom Font Engine */
+  --font-sans: var(--font-sans), sans-serif;
+
+  /* Define Specific Brand Colors Matching Preschool Portal */
+  --color-primary: #FF8A00;
+  --color-primary-hover: #FF7A00;
+  --color-secondary: #3A86FF;
+  --color-secondary-hover: #2575FC;
+  --color-success: #06D6A0;
+  --color-danger: #EF476F;
+  --color-warning: #FFD166;
+  --color-purple: #8338EC;
+  --color-cream: #FFFDF9;
+  --color-brand-dark: #111111;
+
+  /* Custom Layout Helpers */
+  --shadow-glow: 0 10px 25px rgba(255, 138, 0, 0.3);
+  --shadow-primary-glow: 0 10px 20px rgba(58, 134, 255, 0.25);
+
+  /* Custom Dynamic Animations */
+  --animate-float: float 8s ease-in-out infinite;
+  --animate-float-reverse: float 9s ease-in-out infinite reverse;
+  --animate-pulse-slow: pulse-slow 4s ease-in-out infinite;
+  --animate-spin-slow: spin-slow 15s linear infinite;
+  --animate-shimmer: shimmer 3.5s ease-in-out infinite;
+
+  @keyframes shimmer {
+    0% { transform: translateX(-150%) skewX(-15deg); }
+    50% { transform: translateX(-150%) skewX(-15deg); }
+    100% { transform: translateX(150%) skewX(-15deg); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-20px) scale(1.03); }
+  }
+  @keyframes pulse-slow {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.04); opacity: 0.8; }
+  }
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+}
+
+/* Global Native Resets Over Preflight */
+html {
+  scroll-behavior: smooth;
+  height: 100%;
+}
+
+body {
+  background-color: #FFFDF9; /* Fallback cream background */
+  font-family: var(--font-sans), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+/* Custom gradient text utility shortcut */
+.text-gradient {
+  background: linear-gradient(135deg, #FF8A00, #EF476F);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Transition utilities */
+.transition-smooth {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.transition-bounce {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}

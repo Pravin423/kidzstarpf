@@ -1,0 +1,166 @@
+.section {
+  position: relative;
+  height: 100vh;
+  background-color: #FCFBFA;
+  overflow: hidden;
+}
+
+.stickyWrapper {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: 1.2fr 0.8fr;
+  }
+}
+
+.imageColumn {
+  display: flex;
+  justify-content: center;
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  margin-top: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .imageContainer {
+    height: 600px;
+  }
+}
+
+.imageWrapper {
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+}
+
+.imageWrapper:not(:first-child) {
+  transform: translateY(100%);
+}
+
+.image {
+  object-fit: cover;
+}
+
+.textColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.header {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: #64748B;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 600;
+  color: #0F172A;
+  line-height: 1.1;
+  margin-bottom: 4rem;
+  letter-spacing: -0.02em;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 3.5rem;
+}
+
+.progressBarBg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  background-color: #F1F5F9;
+  border-radius: 2px;
+}
+
+.progressBarFill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  background-color: #0F172A;
+  height: 0;
+  border-radius: 2px;
+}
+
+.item {
+  display: flex;
+  margin-bottom: 4rem;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.item:hover {
+  transform: translateX(5px);
+}
+
+.item:last-child {
+  margin-bottom: 0;
+}
+
+.itemNumber {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #94A3B8;
+  margin-right: 1.5rem;
+  transition: color 0.3s ease;
+}
+
+.itemContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.itemTitle {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #94A3B8;
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.itemDescription {
+  font-size: 1rem;
+  color: #94A3B8;
+  line-height: 1.6;
+  transition: color 0.3s ease;
+}
+
+.activeText {
+  color: #0F172A !important;
+}
+
+.activeDesc {
+  color: #475569 !important;
+}

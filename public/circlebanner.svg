@@ -1,0 +1,18 @@
+<svg width="1000" height="1000" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Smooth soft warm cream gradient -->
+    <radialGradient id="circleGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="0%" stop-color="#FFFDF7" />
+      <stop offset="70%" stop-color="#FFFDEB" />
+      <stop offset="100%" stop-color="#F8F3D4" />
+    </radialGradient>
+    
+    <!-- Soft surrounding depth drop shadow -->
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="20" stdDeviation="40" flood-color="#E5DFBA" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+  
+  <!-- Main dynamic backdrop circle -->
+  <circle cx="500" cy="500" r="460" fill="url(#circleGradient)" filter="url(#softShadow)"/>
+</svg>

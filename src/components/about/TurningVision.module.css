@@ -1,0 +1,61 @@
+.section {
+  padding: 8rem 0;
+  background-color: #FCFBFA;
+  overflow: hidden;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.textSection {
+  text-align: center;
+  position: relative;
+  z-index: 3;
+  /* Bring text to front */
+  margin-bottom: -2vw;
+  /* Pull video up over the text */
+}
+
+.title {
+  font-size: clamp(5rem, 12vw, 10rem);
+  font-weight: 500;
+  color: #CBD5E1;
+  margin: 0;
+  text-align: center;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+.title span {
+  display: inline-block;
+  white-space: pre;
+}
+
+.videoContainer {
+  display: flex;
+  justify-content: center;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  position: relative;
+  z-index: 2;
+}
+
+.videoWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  border-radius: 2rem;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  transform-origin: bottom center;
+  backface-visibility: hidden;
+}
+
+.video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
