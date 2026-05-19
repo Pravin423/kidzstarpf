@@ -5,11 +5,13 @@ import Link from "next/link";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useAdmissionModal } from "../context/AdmissionModalContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Footer() {
   const containerRef = useRef(null);
+  const { openModal } = useAdmissionModal();
 
   useEffect(() => {
     const el = containerRef.current;
@@ -89,9 +91,9 @@ export default function Footer() {
             <p className="text-[0.95rem] text-slate-700 leading-relaxed font-sans font-medium mb-8 max-w-[320px]">
               Nurturing young minds through play, exploration, and creative learning. A wonderful place for your child to grow, discover, and shine.
             </p>
-            <Link 
-              href="/#admission" 
-              className="relative inline-flex items-center justify-center h-[50px] px-8 rounded-full overflow-hidden font-sans text-[0.95rem] font-bold tracking-wide shadow-sm group transition-all duration-500 hover:scale-[1.04] active:scale-95 bg-black text-white hover:text-black hover:shadow-[0_8px_20px_rgba(132,251,65,0.2)] border border-white/10"
+            <button 
+              onClick={openModal} 
+              className="relative inline-flex items-center justify-center h-[50px] px-8 rounded-full overflow-hidden font-sans text-[0.95rem] font-bold tracking-wide shadow-sm group transition-all duration-500 hover:scale-[1.04] active:scale-95 bg-black text-white hover:text-black hover:shadow-[0_8px_20px_rgba(132,251,65,0.2)] border border-white/10 cursor-pointer"
             >
               {/* Button Text */}
               <span className="relative z-10 transition-colors duration-300">
@@ -103,7 +105,7 @@ export default function Footer() {
 
               {/* Hover Radial Ripple Reveal */}
               <span className="absolute w-[200px] h-[200px] bg-[#84FB41] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-0 group-hover:scale-100 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] -z-10 pointer-events-none"></span>
-            </Link>
+            </button>
           </div>
 
           {/* Column 2: Contact & Address */}
@@ -141,13 +143,13 @@ export default function Footer() {
               <Link href="/about" className="text-[1rem] text-slate-600 hover:text-black font-sans font-medium transition-colors duration-200">
                 About Us
               </Link>
-              <Link href="/#services" className="text-[1rem] text-slate-600 hover:text-black font-sans font-medium transition-colors duration-200">
+              <Link href="/programs" className="text-[1rem] text-slate-600 hover:text-black font-sans font-medium transition-colors duration-200">
                 Programs
               </Link>
-              <Link href="/#curriculum" className="text-[1rem] text-slate-600 hover:text-black font-sans font-medium transition-colors duration-200">
+              <Link href="/gallery" className="text-[1rem] text-slate-600 hover:text-black font-sans font-medium transition-colors duration-200">
                 Gallery
               </Link>
-              <Link href="/#admission" className="text-[1rem] text-slate-600 hover:text-black font-sans font-medium transition-colors duration-200">
+              <Link href="/contact" className="text-[1rem] text-slate-600 hover:text-black font-sans font-medium transition-colors duration-200">
                 Contact
               </Link>
             </div>
@@ -165,7 +167,7 @@ export default function Footer() {
               <Link href="#" className="text-[1rem] text-slate-600 hover:text-black font-sans font-medium transition-colors duration-200">
                 Terms of Service
               </Link>
-              <Link href="/#admission" className="text-[1rem] text-slate-600 hover:text-black font-sans font-medium transition-colors duration-200">
+              <Link href="/contact" className="text-[1rem] text-slate-600 hover:text-black font-sans font-medium transition-colors duration-200">
                 Thane Centers
               </Link>
             </div>

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useAdmissionModal } from "../context/AdmissionModalContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -38,6 +39,7 @@ const FLOATING_CARDS = [
 export default function JoinUs() {
   const containerRef = useRef(null);
   const cardsRef = useRef([]);
+  const { openModal } = useAdmissionModal();
 
   useEffect(() => {
     const el = containerRef.current;
@@ -266,9 +268,9 @@ export default function JoinUs() {
 
         {/* Stretched Premium Call-To-Action Pill Buttons */}
         <div className="flex flex-col sm:flex-row items-center gap-4">
-          <Link 
-            href="#admission" 
-            className="relative inline-flex items-center justify-center h-[54px] px-8 rounded-full overflow-hidden font-semibold tracking-wide shadow-lg group transition-all duration-500 hover:scale-[1.04] active:scale-95 z-20 bg-black text-white hover:text-black hover:shadow-[0_12px_30px_rgba(132,251,65,0.25)] border border-white/10 w-full sm:w-auto"
+          <button 
+            onClick={openModal} 
+            className="relative inline-flex items-center justify-center h-[54px] px-8 rounded-full overflow-hidden font-semibold tracking-wide shadow-lg group transition-all duration-500 hover:scale-[1.04] active:scale-95 z-20 bg-black text-white hover:text-black hover:shadow-[0_12px_30px_rgba(132,251,65,0.25)] border border-white/10 w-full sm:w-auto cursor-pointer"
           >
             {/* Button Text */}
             <span className="relative z-10 transition-colors duration-300">
@@ -280,10 +282,10 @@ export default function JoinUs() {
 
             {/* Hover Radial Ripple Reveal */}
             <span className="absolute w-[320px] h-[320px] bg-[#84FB41] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-0 group-hover:scale-100 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] -z-10 pointer-events-none"></span>
-          </Link>
-          <Link 
-            href="#admission" 
-            className="relative inline-flex items-center justify-center h-[54px] px-8 rounded-full overflow-hidden font-semibold tracking-wide shadow-md group transition-all duration-500 hover:scale-[1.04] active:scale-95 z-20 bg-white text-black hover:text-white hover:shadow-[0_12px_30px_rgba(0,0,0,0.12)] border border-neutral-200 hover:border-black w-full sm:w-auto"
+          </button>
+          <button 
+            onClick={openModal} 
+            className="relative inline-flex items-center justify-center h-[54px] px-8 rounded-full overflow-hidden font-semibold tracking-wide shadow-md group transition-all duration-500 hover:scale-[1.04] active:scale-95 z-20 bg-white text-black hover:text-white hover:shadow-[0_12px_30px_rgba(0,0,0,0.12)] border border-neutral-200 hover:border-black w-full sm:w-auto cursor-pointer"
           >
             {/* Button Text */}
             <span className="relative z-10 transition-colors duration-300">
@@ -295,7 +297,7 @@ export default function JoinUs() {
 
             {/* Hover Radial Ripple Reveal */}
             <span className="absolute w-[280px] h-[280px] bg-black rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-0 group-hover:scale-100 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] -z-10 pointer-events-none"></span>
-          </Link>
+          </button>
         </div>
 
       </div>

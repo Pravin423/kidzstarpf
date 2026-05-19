@@ -1,6 +1,8 @@
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/Navbar";
+import { AdmissionModalProvider } from "../context/AdmissionModalContext";
+import AdmissionModal from "../components/AdmissionModal";
 
 const sansFont = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -18,10 +20,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={sansFont.variable}>
       <body>
-        <Navbar />
-        <main>
-          {children}
-        </main>
+        <AdmissionModalProvider>
+          <Navbar />
+          <AdmissionModal />
+          <main>
+            {children}
+          </main>
+        </AdmissionModalProvider>
       </body>
     </html>
   );

@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, ChevronDown } from "lucide-react";
+import { useAdmissionModal } from "../context/AdmissionModalContext";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,6 +14,7 @@ export default function Navbar() {
   const [showBanner, setShowBanner] = useState(true);
   const pathname = usePathname();
   const navRef = useRef(null);
+  const { openModal } = useAdmissionModal();
 
   useEffect(() => {
     // Initial navbar animation
@@ -127,9 +129,9 @@ export default function Navbar() {
 
         {/* Action Pill Button with Premium Radial Ripple Hover & Idle Shimmer */}
         <div className="nav-item hidden lg:block">
-          <Link 
-            href="/#admission" 
-            className="relative inline-flex items-center justify-center h-[46px] px-8 rounded-full overflow-hidden font-sans text-[0.95rem] font-bold tracking-[0.2px] shadow-sm group transition-all duration-500 hover:scale-[1.04] active:scale-95 bg-black text-white hover:text-black hover:shadow-[0_8px_20px_rgba(132,251,65,0.2)] border border-white/10"
+          <button 
+            onClick={openModal} 
+            className="relative inline-flex items-center justify-center h-[46px] px-8 rounded-full overflow-hidden font-sans text-[0.95rem] font-bold tracking-[0.2px] shadow-sm group transition-all duration-500 hover:scale-[1.04] active:scale-95 bg-black text-white hover:text-black hover:shadow-[0_8px_20px_rgba(132,251,65,0.2)] border border-white/10 cursor-pointer"
           >
             {/* Button Text */}
             <span className="relative z-10 transition-colors duration-300">
@@ -141,7 +143,7 @@ export default function Navbar() {
 
             {/* Hover Radial Ripple Reveal */}
             <span className="absolute w-[200px] h-[200px] bg-[#84FB41] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-0 group-hover:scale-100 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] -z-10 pointer-events-none"></span>
-          </Link>
+          </button>
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -172,10 +174,12 @@ export default function Navbar() {
             </li>
           ))}
           <li className="pt-2">
-            <Link 
-              href="/#admission" 
-              className="relative flex items-center justify-center h-[50px] w-full rounded-full overflow-hidden font-sans text-[1.1rem] font-bold tracking-[0.2px] shadow-sm group transition-all duration-500 hover:scale-[1.04] active:scale-95 bg-black text-white hover:text-black hover:shadow-[0_8px_20px_rgba(132,251,65,0.2)] border border-white/10 text-center"
-              onClick={() => setIsOpen(false)}
+            <button 
+              onClick={() => {
+                setIsOpen(false);
+                openModal();
+              }} 
+              className="relative flex items-center justify-center h-[50px] w-full rounded-full overflow-hidden font-sans text-[1.1rem] font-bold tracking-[0.2px] shadow-sm group transition-all duration-500 hover:scale-[1.04] active:scale-95 bg-black text-white hover:text-black hover:shadow-[0_8px_20px_rgba(132,251,65,0.2)] border border-white/10 text-center cursor-pointer"
             >
               {/* Button Text */}
               <span className="relative z-10 transition-colors duration-300">
@@ -187,7 +191,7 @@ export default function Navbar() {
 
               {/* Hover Radial Ripple Reveal */}
               <span className="absolute w-[240px] h-[240px] bg-[#84FB41] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-0 group-hover:scale-100 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] -z-10 pointer-events-none"></span>
-            </Link>
+            </button>
           </li>
         </ul>
       </div>

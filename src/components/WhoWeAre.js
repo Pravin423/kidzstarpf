@@ -239,7 +239,7 @@ export default function WhoWeAre() {
 
           <div className="flex items-start">
             <Link
-              href="/#admission"
+              href="/programs"
               className="relative inline-flex items-center justify-center h-[56px] px-12 rounded-full overflow-hidden font-sans text-lg font-bold tracking-wide shadow-xl group transition-all duration-500 hover:scale-[1.04] active:scale-95 bg-black text-white hover:text-black hover:shadow-[0_12px_30px_rgba(132,251,65,0.25)] border border-white/10"
             >
               {/* Button Text */}

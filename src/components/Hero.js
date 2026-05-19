@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowUpRight, Check } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useAdmissionModal } from "../context/AdmissionModalContext";
 
 export default function Hero() {
   const [hasScrolled, setHasScrolled] = useState(false);
@@ -13,6 +14,7 @@ export default function Hero() {
   const cardRef = useRef(null);
   const overlayTextRef = useRef(null);
   const mediaContainerRef = useRef(null);
+  const { openModal } = useAdmissionModal();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -185,9 +187,9 @@ export default function Hero() {
         </p>
 
         {/* Black CTA Pill Trigger with Premium Radial Ripple Hover & Idle Shimmer */}
-        <Link 
-          href="#admission" 
-          className="relative inline-flex items-center justify-center h-[54px] px-10 rounded-full overflow-hidden font-semibold tracking-wide shadow-lg group transition-all duration-500 hover:scale-[1.04] active:scale-95 z-20 bg-black text-white hover:text-black hover:shadow-[0_12px_30px_rgba(132,251,65,0.25)] border border-white/10"
+        <button 
+          onClick={openModal} 
+          className="relative inline-flex items-center justify-center h-[54px] px-10 rounded-full overflow-hidden font-semibold tracking-wide shadow-lg group transition-all duration-500 hover:scale-[1.04] active:scale-95 z-20 bg-black text-white hover:text-black hover:shadow-[0_12px_30px_rgba(132,251,65,0.25)] border border-white/10 cursor-pointer"
         >
           {/* Button Text */}
           <span className="relative z-10 transition-colors duration-300">
@@ -199,7 +201,7 @@ export default function Hero() {
 
           {/* Hover Radial Ripple Reveal */}
           <span className="absolute w-[280px] h-[280px] bg-[#84FB41] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-0 group-hover:scale-100 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] -z-10 pointer-events-none"></span>
-        </Link>
+        </button>
       </div>
 
       {/* GSAP Scale-to-Fullscreen Pinning Trigger Wrapper */}
