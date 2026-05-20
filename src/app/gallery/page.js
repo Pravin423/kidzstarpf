@@ -1,5 +1,6 @@
 import Footer from "../../components/Footer";
 import Gallery from "../../components/gallery/Gallery";
+import VideoGallery from "../../components/gallery/VideoGallery";
 
 export const metadata = {
   title: "Gallery | KidzStar Preschool",
@@ -19,6 +20,7 @@ export default function GalleryPage() {
       ></div>
 
       <Gallery />
+      <VideoGallery />
 
       <Footer />
     </main>
