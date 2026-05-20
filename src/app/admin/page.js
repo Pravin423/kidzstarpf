@@ -486,6 +486,285 @@ function MediaManager() {
   );
 }
 
+const QUALIFICATION_COLORS = {
+  "10+2": { bg: "#FFF3CD", text: "#856404", border: "#FFDA6A" },
+  "Graduate": { bg: "#D1E7FF", text: "#0747A6", border: "#84B8FF" },
+  "Post Graduate": { bg: "#D2F4EA", text: "#0A5344", border: "#5DE0C7" },
+  "Other": { bg: "#EDE9FE", text: "#5B21B6", border: "#C4B5FD" },
+};
+
+function TeacherEnquiryRow({ entry, onToggle, onDelete }) {
+  const [toggling, setToggling] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const qual = QUALIFICATION_COLORS[entry.qualification] || QUALIFICATION_COLORS.Other;
+
+  const handleToggle = async () => {
+    setToggling(true);
+    await onToggle(entry._id, !entry.isChecked);
+    setToggling(false);
+  };
+
+  const handleDelete = async () => {
+    if (!confirm(`Delete enquiry for ${entry.fullName}? This cannot be undone.`)) return;
+    setDeleting(true);
+    await onDelete(entry._id);
+  };
+
+  return (
+    <div className={`enquiry-row ${entry.isChecked ? "checked" : ""} ${deleting ? "fading" : ""}`}>
+      {/* Check Toggle */}
+      <button
+        className="check-btn cursor-pointer"
+        onClick={handleToggle}
+        disabled={toggling}
+        title={entry.isChecked ? "Mark as pending" : "Mark as reviewed"}
+        id={`check-teacher-${entry._id}`}
+      >
+        {toggling ? (
+          <RefreshCw size={22} className="spinning" />
+        ) : entry.isChecked ? (
+          <CheckCircle2 size={22} color="#16A34A" />
+        ) : (
+          <Circle size={22} color="#94a3b8" />
+        )}
+      </button>
+
+      {/* Content */}
+      <div className="enquiry-content">
+        {/* Header row */}
+        <div className="enquiry-header">
+          <div className="enquiry-names">
+            <span className="enquiry-child">
+              <Users size={14} /> {entry.fullName}
+            </span>
+          </div>
+          <span
+            className="program-badge"
+            style={{ background: qual.bg, color: qual.text, borderColor: qual.border }}
+          >
+            {entry.qualification}
+          </span>
+        </div>
+
+        {/* Details row */}
+        <div className="enquiry-details">
+          <span className="detail-item">
+            <Mail size={13} /> {entry.email}
+          </span>
+          <span className="detail-item">
+            <Phone size={13} /> {entry.phone}
+          </span>
+          <span className="detail-item">
+            <Calendar size={13} /> {formatDate(entry.createdAt)}
+          </span>
+        </div>
+
+        {/* Notes */}
+        {entry.notes && (
+          <p className="enquiry-notes">
+            <BookOpen size={13} /> {entry.notes}
+          </p>
+        )}
+      </div>
+
+      {/* Status badge */}
+      <span className={`status-badge ${entry.isChecked ? "reviewed" : "pending"}`}>
+        {entry.isChecked ? "Reviewed" : "Pending"}
+      </span>
+
+      {/* Delete */}
+      <button
+        className="delete-btn cursor-pointer"
+        onClick={handleDelete}
+        disabled={deleting}
+        title="Delete enquiry"
+        id={`delete-teacher-${entry._id}`}
+      >
+        <Trash2 size={16} />
+      </button>
+    </div>
+  );
+}
+
+function TeacherEnquiriesManager() {
+  const [enquiries, setEnquiries] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [search, setSearch] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [filterQual, setFilterQual] = useState("all");
+
+  const fetchEnquiries = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/teacher-enquiry");
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error || "Failed to load enquiries");
+      setEnquiries(data.data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchEnquiries();
+  }, [fetchEnquiries]);
+
+  const handleToggle = async (id, newChecked) => {
+    // Optimistic update
+    setEnquiries((prev) =>
+      prev.map((e) => (e._id === id ? { ...e, isChecked: newChecked } : e))
+    );
+    try {
+      const res = await fetch(`/api/teacher-enquiry/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isChecked: newChecked }),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error);
+    } catch (err) {
+      // Revert on failure
+      setEnquiries((prev) =>
+        prev.map((e) => (e._id === id ? { ...e, isChecked: !newChecked } : e))
+      );
+      alert("Failed to update: " + err.message);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const res = await fetch(`/api/teacher-enquiry/${id}`, { method: "DELETE" });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error);
+      setEnquiries((prev) => prev.filter((e) => e._id !== id));
+    } catch (err) {
+      alert("Failed to delete: " + err.message);
+    }
+  };
+
+  // Filtered list
+  const filtered = enquiries.filter((e) => {
+    const q = search.toLowerCase();
+    const matchSearch =
+      !q ||
+      e.fullName.toLowerCase().includes(q) ||
+      e.email.toLowerCase().includes(q) ||
+      e.phone.includes(q);
+    const matchStatus =
+      filterStatus === "all" ||
+      (filterStatus === "reviewed" && e.isChecked) ||
+      (filterStatus === "pending" && !e.isChecked);
+    const matchQual = filterQual === "all" || e.qualification === filterQual;
+    return matchSearch && matchStatus && matchQual;
+  });
+
+  const total = enquiries.length;
+  const reviewed = enquiries.filter((e) => e.isChecked).length;
+  const pending = total - reviewed;
+
+  return (
+    <>
+      {/* Stats */}
+      <div className="stats-grid animate-fade-in">
+        <StatCard icon={<Users size={22} />} label="Total Course Enquiries" value={total} accent="#0504DC" />
+        <StatCard icon={<ClipboardCheck size={22} />} label="Reviewed" value={reviewed} accent="#16A34A" />
+        <StatCard icon={<Clock size={22} />} label="Pending Review" value={pending} accent="#D97706" />
+        <StatCard icon={<Star size={22} />} label="Review Rate" value={total ? Math.round((reviewed / total) * 100) + "%" : "—"} accent="#7C3AED" />
+      </div>
+
+      {/* Filters */}
+      <div className="filters-bar animate-fade-in">
+        <div className="search-wrap">
+          <Search size={16} className="search-icon" />
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search by candidate name, email or phone…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            id="admin-teacher-search"
+          />
+        </div>
+        <div className="filter-group">
+          <Filter size={15} />
+          <select
+            className="filter-select"
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            id="filter-teacher-status"
+          >
+            <option value="all">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="reviewed">Reviewed</option>
+          </select>
+          <ChevronDown size={14} className="filter-arrow" />
+        </div>
+        <div className="filter-group">
+          <BookOpen size={15} />
+          <select
+            className="filter-select"
+            value={filterQual}
+            onChange={(e) => setFilterQual(e.target.value)}
+            id="filter-teacher-qual"
+          >
+            <option value="all">All Qualifications</option>
+            <option value="10+2">10+2 / High School</option>
+            <option value="Graduate">Graduate</option>
+            <option value="Post Graduate">Post Graduate</option>
+            <option value="Other">Other</option>
+          </select>
+          <ChevronDown size={14} className="filter-arrow" />
+        </div>
+        <button className="refresh-btn text-xs px-3 py-1.5 border rounded-lg hover:bg-slate-50 flex items-center gap-1 cursor-pointer" onClick={fetchEnquiries} title="Refresh">
+          <RefreshCw size={14} className={loading ? "spinning" : ""} />
+          <span>Refresh</span>
+        </button>
+      </div>
+
+      {/* List */}
+      <div className="enquiry-list-wrap animate-fade-in">
+        {loading && (
+          <div className="list-state">
+            <RefreshCw size={32} className="spinning" color="#0504DC" />
+            <p>Loading enquiries…</p>
+          </div>
+        )}
+        {!loading && error && (
+          <div className="list-state error">
+            <p className="list-error-title">⚠️ Could not load data</p>
+            <p className="list-error-msg">{error}</p>
+            <button className="refresh-btn" onClick={fetchEnquiries} style={{ marginTop: 12 }}>Try Again</button>
+          </div>
+        )}
+        {!loading && !error && filtered.length === 0 && (
+          <div className="list-state">
+            <ClipboardCheck size={40} color="#CBD5E1" />
+            <p className="list-empty">{enquiries.length === 0 ? "No teacher course enquiries yet." : "No results match your filters."}</p>
+          </div>
+        )}
+        {!loading && !error && filtered.map((entry) => (
+          <TeacherEnquiryRow
+            key={entry._id}
+            entry={entry}
+            onToggle={handleToggle}
+            onDelete={handleDelete}
+          />
+        ))}
+      </div>
+
+      {/* Footer count */}
+      {!loading && !error && filtered.length > 0 && (
+        <p className="list-count">Showing {filtered.length} of {total} enquiries</p>
+      )}
+    </>
+  );
+}
+
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
 function Dashboard({ onLogout }) {
   const [tab, setTab] = useState("enquiries"); // "enquiries" | "media"
@@ -580,7 +859,13 @@ function Dashboard({ onLogout }) {
           </div>
           <div>
             <h1 className="dashboard-title">KidzStar Admin</h1>
-            <p className="dashboard-subtitle">{tab === "media" ? "Media Manager" : "Admission Enquiries"}</p>
+            <p className="dashboard-subtitle">
+              {tab === "media" 
+                ? "Media Manager" 
+                : tab === "teacher-enquiries" 
+                ? "Teacher Course Enquiries" 
+                : "Admission Enquiries"}
+            </p>
           </div>
         </div>
         <div className="dashboard-header-actions">
@@ -607,6 +892,13 @@ function Dashboard({ onLogout }) {
           <ClipboardCheck size={16} /> Enquiries
         </button>
         <button
+          className={`dashboard-tab ${tab === "teacher-enquiries" ? "active" : ""}`}
+          onClick={() => setTab("teacher-enquiries")}
+          id="tab-teacher-enquiries"
+        >
+          <Users size={16} /> Teacher Enquiries
+        </button>
+        <button
           className={`dashboard-tab ${tab === "media" ? "active" : ""}`}
           onClick={() => setTab("media")}
           id="tab-media"
@@ -618,6 +910,8 @@ function Dashboard({ onLogout }) {
       <div className="dashboard-body">
         {tab === "media" ? (
           <MediaManager />
+        ) : tab === "teacher-enquiries" ? (
+          <TeacherEnquiriesManager />
         ) : (
           <>
             {/* Stats */}

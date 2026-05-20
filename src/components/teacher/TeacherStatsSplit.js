@@ -1,13 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { useAdmissionModal } from "../../context/AdmissionModalContext";
+import EccedEnquiryModal from "./EccedEnquiryModal";
 
 export default function TeacherStatsSplit() {
   const containerRef = useRef(null);
-  const { openModal } = useAdmissionModal();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     let ctx;
@@ -73,7 +73,7 @@ export default function TeacherStatsSplit() {
             <p className="text-neutral-500 text-sm md:text-base leading-relaxed opacity-0">
               Learn from experienced early education experts, participate in interactive workshops, classroom observations, and gain job placement assistance after course completion.
             </p>
-            <button onClick={openModal} className="group relative px-8 rounded-full overflow-hidden font-sans text-[0.95rem] font-bold tracking-[0.2px] shadow-sm transition-all duration-500 hover:scale-[1.04] active:scale-95 bg-black text-white hover:text-black hover:shadow-[0_8px_20px_rgba(132,251,65,0.2)] border border-white/10 opacity-0 h-[46px] inline-flex items-center justify-center cursor-pointer">
+            <button onClick={() => setIsModalOpen(true)} className="group relative px-8 rounded-full overflow-hidden font-sans text-[0.95rem] font-bold tracking-[0.2px] shadow-sm transition-all duration-500 hover:scale-[1.04] active:scale-95 bg-black text-white hover:text-black hover:shadow-[0_8px_20px_rgba(132,251,65,0.2)] border border-white/10 opacity-0 h-[46px] inline-flex items-center justify-center cursor-pointer">
               {/* Button Text */}
               <span className="relative z-10 transition-colors duration-300">
                 Enroll in ECCED Course
@@ -149,6 +149,8 @@ export default function TeacherStatsSplit() {
         </div>
 
       </div>
+
+      <EccedEnquiryModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </section>
   );
 }
