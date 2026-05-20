@@ -5,7 +5,7 @@ import gsap from "gsap";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, Key } from "lucide-react";
 import { useAdmissionModal } from "../context/AdmissionModalContext";
 
 export default function Navbar() {
@@ -13,6 +13,11 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
   const pathname = usePathname();
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
+    setIsOpen(false);
+  }
   const navRef = useRef(null);
   const { openModal } = useAdmissionModal();
 
@@ -49,9 +54,6 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    setIsOpen(false);
-  }, [pathname]);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -89,7 +91,7 @@ export default function Navbar() {
         scrolled ? "py-2.5" : "py-[18px]"
       }`}>
         {/* Logo Group */}
-        <div className="nav-item">
+        <div className="nav-item relative flex items-center">
           <Link href="/" className="flex items-center gap-3 text-black hover:opacity-90 transition-opacity">
             <div className="relative w-[52px] h-[52px] flex-shrink-0 flex items-center justify-center">
               <Image 
@@ -101,7 +103,7 @@ export default function Navbar() {
                 priority
               />
             </div>
-            <div className="flex flex-col items-start justify-center">
+            <div className="flex flex-col items-start justify-center pr-2">
               <span className="font-sans text-[1.65rem] font-extrabold tracking-tight text-neutral-900 leading-[1.1]">
                 KidzStar
               </span>
@@ -109,6 +111,16 @@ export default function Navbar() {
                 Pre-Primary School
               </span>
             </div>
+          </Link>
+          
+          {/* Hidden Admin Login Link */}
+          <Link 
+            href="/admin" 
+            className="absolute -right-5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-[#0504DC] opacity-0 hover:opacity-100 focus:opacity-100 transition-all duration-300 p-1.5 rounded-full hover:bg-neutral-100 focus:bg-neutral-100 outline-none cursor-pointer"
+            title="Admin Login"
+            aria-label="Admin Login"
+          >
+            <Key size={13} />
           </Link>
         </div>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import Link from "next/link";
 import {
   CheckCircle2,
   Circle,
@@ -26,6 +27,7 @@ import {
   Video,
   X,
   Images,
+  ArrowLeft,
 } from "lucide-react";
 
 // ─── Simple password gate (replace with proper auth if needed) ───────────────
@@ -75,7 +77,14 @@ function LoginScreen({ onLogin }) {
   };
 
   return (
-    <div className="admin-login-bg">
+    <div className="admin-login-bg relative">
+      <Link 
+        href="/" 
+        className="absolute top-6 left-6 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/15 text-white text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5 z-50 cursor-pointer"
+      >
+        <ArrowLeft size={16} />
+        Back to Home
+      </Link>
       <div className={`admin-login-card ${shaking ? "shake" : ""}`}>
         {/* Logo */}
         <div className="admin-logo-wrap">
@@ -255,7 +264,10 @@ function MediaManager() {
     finally { setLoadingMedia(false); }
   }, []);
 
-  useEffect(() => { fetchMedia(); }, [fetchMedia]);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchMedia();
+  }, [fetchMedia]);
 
   const handleFileSelect = (file) => {
     if (!file) return;
@@ -500,6 +512,7 @@ function Dashboard({ onLogout }) {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchAdmissions();
   }, [fetchAdmissions]);
 
@@ -709,6 +722,7 @@ export default function AdminPage() {
 
   // Persist session in sessionStorage
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (sessionStorage.getItem("ks_admin_auth") === "1") setAuthed(true);
   }, []);
 
