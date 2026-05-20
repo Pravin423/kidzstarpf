@@ -1,93 +1,103 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import styles from "./Gallery.module.css";
 
-const galleryItems = [
-  { id: 1, src: "/kimg1.png", title: "Creative Playtime" },
-  { id: 2, src: "/kimg2.png", title: "Learning Together" },
-  { id: 3, src: "/kimg3.png", title: "Story Time" },
-  { id: 4, src: "/kimg4.png", title: "Outdoor Exploration" },
-  { id: 5, src: "/kimg5.png", title: "Art & Craft" },
+// Static fallback items shown when no DB images exist yet
+const FALLBACK_ITEMS = [
+  { _id: "f1", url: "/kimg1.png", title: "Creative Playtime" },
+  { _id: "f2", url: "/kimg2.png", title: "Learning Together" },
+  { _id: "f3", url: "/kimg3.png", title: "Story Time" },
+  { _id: "f4", url: "/kimg4.png", title: "Outdoor Exploration" },
+  { _id: "f5", url: "/kimg5.png", title: "Art & Craft" },
 ];
 
 export default function Gallery() {
+  const [galleryItems, setGalleryItems] = useState(FALLBACK_ITEMS);
   const [selectedImg, setSelectedImg] = useState(null);
   const trackRef = useRef(null);
   const containerRef = useRef(null);
+  const tlRef = useRef(null);
 
-  // Duplicate items for seamless loop
+  // Fetch images from DB, fallback to static if none
+  const fetchImages = useCallback(async () => {
+    try {
+      const res = await fetch("/api/media?type=image");
+      const data = await res.json();
+      if (data.success && data.data.length > 0) {
+        setGalleryItems(data.data);
+      }
+    } catch {
+      // keep fallback items
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchImages();
+  }, [fetchImages]);
+
+  // Triplicate for seamless infinite scroll
   const displayItems = [...galleryItems, ...galleryItems, ...galleryItems];
 
   useEffect(() => {
     const track = trackRef.current;
-    const cards = track.querySelectorAll(`.${styles.card}`);
     const container = containerRef.current;
-    
-    if (!track || cards.length === 0) return;
+    if (!track || !container) return;
 
-    // Set perspective on the wrapper
+    const cards = track.querySelectorAll(`.${styles.card}`);
+    if (cards.length === 0) return;
+
     gsap.set(container, { perspective: 1200 });
 
     const cardWidth = 380;
-    const gap = 32; // 2rem
+    const gap = 32;
     const totalWidth = (cardWidth + gap) * galleryItems.length;
 
-    // Infinite horizontal scroll
+    if (tlRef.current) tlRef.current.kill();
+
     const tl = gsap.to(track, {
       x: `-=${totalWidth}`,
       duration: 15,
       ease: "none",
       repeat: -1,
       onUpdate: () => {
-        // Apply 3D curve effect based on position
         const containerRect = container.getBoundingClientRect();
         const centerX = containerRect.left + containerRect.width / 2;
-
         cards.forEach((card) => {
           const rect = card.getBoundingClientRect();
           const cardCenterX = rect.left + rect.width / 2;
-          const distanceFromCenter = cardCenterX - centerX;
-          
-          // Normalize distance (-1 to 1 within viewport)
-          const normalizedDistance = distanceFromCenter / (containerRect.width / 2);
-          
-          // Calculate rotation and Z translation to create a curve
-          if (Math.abs(normalizedDistance) < 1.5) {
-            const rotationY = normalizedDistance * -35; // Tilt edges in
-            const translateZ = Math.abs(normalizedDistance) * -150; // Push edges back
-            
-            // Make center card larger, edges smaller
-            const scale = 1.15 - Math.abs(normalizedDistance) * 0.3;
-            const clampedScale = Math.max(0.7, Math.min(1.15, scale));
-            
+          const dist = cardCenterX - centerX;
+          const norm = dist / (containerRect.width / 2);
+          if (Math.abs(norm) < 1.5) {
+            const rotY = norm * -35;
+            const transZ = Math.abs(norm) * -150;
+            const scale = Math.max(0.7, Math.min(1.15, 1.15 - Math.abs(norm) * 0.3));
             gsap.set(card, {
-              rotateY: rotationY,
-              z: translateZ,
-              scale: clampedScale,
+              rotateY: rotY,
+              z: transZ,
+              scale,
               transformOrigin: "center center",
-              overwrite: "auto"
+              overwrite: "auto",
             });
           }
         });
-      }
+      },
     });
+    tlRef.current = tl;
 
-    // Pause on hover
-    const handleMouseEnter = () => tl.pause();
-    const handleMouseLeave = () => tl.resume();
-
-    container.addEventListener("mouseenter", handleMouseEnter);
-    container.addEventListener("mouseleave", handleMouseLeave);
+    const onEnter = () => tl.pause();
+    const onLeave = () => tl.resume();
+    container.addEventListener("mouseenter", onEnter);
+    container.addEventListener("mouseleave", onLeave);
 
     return () => {
       tl.kill();
-      container.removeEventListener("mouseenter", handleMouseEnter);
-      container.removeEventListener("mouseleave", handleMouseLeave);
+      container.removeEventListener("mouseenter", onEnter);
+      container.removeEventListener("mouseleave", onLeave);
     };
-  }, []);
+  }, [galleryItems]);
 
   return (
     <section className={styles.section}>
@@ -104,17 +114,19 @@ export default function Gallery() {
         <div ref={containerRef} className={styles.carouselWrapper}>
           <div ref={trackRef} className={styles.track}>
             {displayItems.map((item, index) => (
-              <div 
-                key={`${item.id}-${index}`} 
+              <div
+                key={`${item._id}-${index}`}
                 className={styles.card}
                 onClick={() => setSelectedImg(item)}
               >
                 <div className={styles.imageWrapper}>
                   <Image
-                    src={item.src}
-                    alt={item.title}
+                    src={item.url}
+                    alt={item.title || "Gallery image"}
                     fill
                     className={styles.image}
+                    sizes="380px"
+                    unoptimized={item.url?.startsWith("http")}
                   />
                   <div className={styles.overlay}>
                     <span className={styles.cardTitle}>{item.title}</span>
@@ -126,16 +138,17 @@ export default function Gallery() {
         </div>
       </div>
 
-      {/* Lightbox / Fullscreen Image */}
+      {/* Lightbox */}
       {selectedImg && (
         <div className={styles.lightbox} onClick={() => setSelectedImg(null)}>
           <div className={styles.lightboxContent} onClick={(e) => e.stopPropagation()}>
             <div className={styles.lightboxImageWrapper}>
               <Image
-                src={selectedImg.src}
-                alt={selectedImg.title}
+                src={selectedImg.url}
+                alt={selectedImg.title || ""}
                 fill
                 className="object-contain"
+                unoptimized={selectedImg.url?.startsWith("http")}
               />
             </div>
             <h3 className={styles.lightboxTitle}>{selectedImg.title}</h3>

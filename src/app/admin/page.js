@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   CheckCircle2,
   Circle,
@@ -21,6 +21,11 @@ import {
   Mail,
   Calendar,
   BookOpen,
+  Upload,
+  ImageIcon,
+  Video,
+  X,
+  Images,
 } from "lucide-react";
 
 // ─── Simple password gate (replace with proper auth if needed) ───────────────
@@ -226,13 +231,257 @@ function EnquiryRow({ entry, onToggle, onDelete }) {
   );
 }
 
+// ─── Media Manager ─────────────────────────────────────────────────────────────
+function MediaManager() {
+  const [mediaItems, setMediaItems] = useState([]);
+  const [loadingMedia, setLoadingMedia] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
+  const [uploadForm, setUploadForm] = useState({ title: "", category: "General" });
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [uploadError, setUploadError] = useState("");
+  const [uploadSuccess, setUploadSuccess] = useState("");
+  const [filterType, setFilterType] = useState("all");
+  const fileInputRef = useRef(null);
+
+  const fetchMedia = useCallback(async () => {
+    setLoadingMedia(true);
+    try {
+      const res = await fetch("/api/media");
+      const data = await res.json();
+      if (data.success) setMediaItems(data.data);
+    } catch {}
+    finally { setLoadingMedia(false); }
+  }, []);
+
+  useEffect(() => { fetchMedia(); }, [fetchMedia]);
+
+  const handleFileSelect = (file) => {
+    if (!file) return;
+    setSelectedFile(file);
+    setUploadError("");
+    setUploadSuccess("");
+    const reader = new FileReader();
+    reader.onload = (e) => setPreview({ url: e.target.result, type: file.type });
+    reader.readAsDataURL(file);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files[0];
+    if (file) handleFileSelect(file);
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) { setUploadError("Please select a file first."); return; }
+    setUploading(true);
+    setUploadError("");
+    setUploadSuccess("");
+    const fd = new FormData();
+    fd.append("file", selectedFile);
+    fd.append("title", uploadForm.title || selectedFile.name.split(".")[0]);
+    fd.append("category", uploadForm.category);
+    try {
+      const res = await fetch("/api/media", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error || "Upload failed");
+      setUploadSuccess(`✔ "${data.data.title}" uploaded successfully!`);
+      setSelectedFile(null);
+      setPreview(null);
+      setUploadForm({ title: "", category: "General" });
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      fetchMedia();
+    } catch (err) {
+      setUploadError(err.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleDelete = async (id, title) => {
+    if (!confirm(`Delete "${title}"? This cannot be undone.`)) return;
+    try {
+      const res = await fetch(`/api/media/${id}`, { method: "DELETE" });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error);
+      setMediaItems((prev) => prev.filter((m) => m._id !== id));
+    } catch (err) {
+      alert("Delete failed: " + err.message);
+    }
+  };
+
+  const filtered = filterType === "all" ? mediaItems : mediaItems.filter(m => m.type === filterType);
+  const imageCount = mediaItems.filter(m => m.type === "image").length;
+  const videoCount = mediaItems.filter(m => m.type === "video").length;
+
+  return (
+    <div className="media-manager">
+      {/* Stats Row */}
+      <div className="media-stats-row">
+        <div className="media-stat-pill"><ImageIcon size={16} /> {imageCount} Images</div>
+        <div className="media-stat-pill"><Video size={16} /> {videoCount} Videos</div>
+        <div className="media-stat-pill total"><Images size={16} /> {mediaItems.length} Total</div>
+      </div>
+
+      {/* Upload Zone */}
+      <div className="upload-section">
+        <h3 className="upload-heading">Upload New Media</h3>
+        <div
+          className={`drop-zone ${dragOver ? "drop-zone-active" : ""} ${preview ? "drop-zone-has-file" : ""}`}
+          onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={handleDrop}
+          onClick={() => fileInputRef.current?.click()}
+        >
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*,video/*"
+            style={{ display: "none" }}
+            onChange={(e) => handleFileSelect(e.target.files[0])}
+            id="media-file-input"
+          />
+          {preview ? (
+            <div className="drop-preview">
+              {preview.type.startsWith("video") ? (
+                <video src={preview.url} className="preview-media" muted />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={preview.url} alt="preview" className="preview-media" />
+              )}
+              <button
+                className="preview-remove"
+                onClick={(e) => { e.stopPropagation(); setSelectedFile(null); setPreview(null); }}
+              >
+                <X size={16} />
+              </button>
+              <p className="preview-name">{selectedFile?.name}</p>
+            </div>
+          ) : (
+            <div className="drop-placeholder">
+              <Upload size={36} color="#0504DC" />
+              <p className="drop-text">Drag &amp; drop or <span>click to browse</span></p>
+              <p className="drop-hint">Supports JPG, PNG, GIF, MP4, MOV, WEBM</p>
+            </div>
+          )}
+        </div>
+
+        <div className="upload-fields">
+          <div className="upload-field-group">
+            <label className="upload-label" htmlFor="upload-title">Title</label>
+            <input
+              id="upload-title"
+              type="text"
+              className="upload-input"
+              placeholder="e.g. Annual Sports Day"
+              value={uploadForm.title}
+              onChange={(e) => setUploadForm(p => ({ ...p, title: e.target.value }))}
+            />
+          </div>
+          <div className="upload-field-group">
+            <label className="upload-label" htmlFor="upload-category">Category</label>
+            <select
+              id="upload-category"
+              className="upload-input"
+              value={uploadForm.category}
+              onChange={(e) => setUploadForm(p => ({ ...p, category: e.target.value }))}
+            >
+              <option>General</option>
+              <option>Campus Life</option>
+              <option>Events</option>
+              <option>Art &amp; Craft</option>
+              <option>Outdoor</option>
+              <option>Sports</option>
+              <option>Learning</option>
+            </select>
+          </div>
+          <button
+            className="upload-btn"
+            onClick={handleUpload}
+            disabled={uploading || !selectedFile}
+            id="media-upload-submit"
+          >
+            {uploading ? <RefreshCw size={17} className="spinning" /> : <Upload size={17} />}
+            {uploading ? "Uploading..." : "Upload to Gallery"}
+          </button>
+        </div>
+
+        {uploadError && <p className="upload-msg error">{uploadError}</p>}
+        {uploadSuccess && <p className="upload-msg success">{uploadSuccess}</p>}
+      </div>
+
+      {/* Media Grid */}
+      <div className="media-grid-section">
+        <div className="media-grid-header">
+          <h3 className="upload-heading">Gallery Media</h3>
+          <div className="media-filter-tabs">
+            {["all","image","video"].map(t => (
+              <button
+                key={t}
+                className={`media-filter-tab ${filterType === t ? "active" : ""}`}
+                onClick={() => setFilterType(t)}
+              >
+                {t === "all" ? "All" : t === "image" ? "Images" : "Videos"}
+              </button>
+            ))}
+          </div>
+          <button className="refresh-btn" onClick={fetchMedia} style={{ marginLeft: "auto" }}>
+            <RefreshCw size={15} className={loadingMedia ? "spinning" : ""} />
+          </button>
+        </div>
+
+        {loadingMedia ? (
+          <div className="list-state"><RefreshCw size={28} className="spinning" color="#0504DC" /></div>
+        ) : filtered.length === 0 ? (
+          <div className="list-state">
+            <Images size={36} color="#CBD5E1" />
+            <p className="list-empty">No media yet. Upload something above!</p>
+          </div>
+        ) : (
+          <div className="media-grid">
+            {filtered.map((item) => (
+              <div key={item._id} className="media-card">
+                {item.type === "video" ? (
+                  <video src={item.url} className="media-thumb" muted />
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={item.url} alt={item.title} className="media-thumb" />
+                )}
+                <div className="media-card-info">
+                  <span className={`media-type-badge ${item.type}`}>
+                    {item.type === "video" ? <Video size={11} /> : <ImageIcon size={11} />}
+                    {item.type}
+                  </span>
+                  <p className="media-card-title">{item.title || "Untitled"}</p>
+                  <p className="media-card-cat">{item.category}</p>
+                </div>
+                <button
+                  className="media-delete-btn"
+                  onClick={() => handleDelete(item._id, item.title)}
+                  title="Delete"
+                  id={`delete-media-${item._id}`}
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
 function Dashboard({ onLogout }) {
+  const [tab, setTab] = useState("enquiries"); // "enquiries" | "media"
   const [admissions, setAdmissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
-  const [filterStatus, setFilterStatus] = useState("all"); // all | pending | reviewed
+  const [filterStatus, setFilterStatus] = useState("all");
   const [filterProgram, setFilterProgram] = useState("all");
 
   const fetchAdmissions = useCallback(async () => {
@@ -318,14 +567,16 @@ function Dashboard({ onLogout }) {
           </div>
           <div>
             <h1 className="dashboard-title">KidzStar Admin</h1>
-            <p className="dashboard-subtitle">Admission Enquiries</p>
+            <p className="dashboard-subtitle">{tab === "media" ? "Media Manager" : "Admission Enquiries"}</p>
           </div>
         </div>
         <div className="dashboard-header-actions">
-          <button className="refresh-btn" onClick={fetchAdmissions} id="refresh-admissions" title="Refresh">
-            <RefreshCw size={16} className={loading ? "spinning" : ""} />
-            <span>Refresh</span>
-          </button>
+          {tab === "enquiries" && (
+            <button className="refresh-btn" onClick={fetchAdmissions} id="refresh-admissions" title="Refresh">
+              <RefreshCw size={16} className={loading ? "spinning" : ""} />
+              <span>Refresh</span>
+            </button>
+          )}
           <button className="logout-btn" onClick={onLogout} id="admin-logout">
             <LogOut size={16} />
             <span>Logout</span>
@@ -333,9 +584,31 @@ function Dashboard({ onLogout }) {
         </div>
       </header>
 
+      {/* Tab Navigation */}
+      <div className="dashboard-tabs">
+        <button
+          className={`dashboard-tab ${tab === "enquiries" ? "active" : ""}`}
+          onClick={() => setTab("enquiries")}
+          id="tab-enquiries"
+        >
+          <ClipboardCheck size={16} /> Enquiries
+        </button>
+        <button
+          className={`dashboard-tab ${tab === "media" ? "active" : ""}`}
+          onClick={() => setTab("media")}
+          id="tab-media"
+        >
+          <Images size={16} /> Media Gallery
+        </button>
+      </div>
+
       <div className="dashboard-body">
-        {/* Stats */}
-        <div className="stats-grid">
+        {tab === "media" ? (
+          <MediaManager />
+        ) : (
+          <>
+            {/* Stats */}
+            <div className="stats-grid">
           <StatCard icon={<Users size={22} />} label="Total Enquiries" value={total} accent="#0504DC" />
           <StatCard icon={<ClipboardCheck size={22} />} label="Reviewed" value={reviewed} accent="#16A34A" />
           <StatCard icon={<Clock size={22} />} label="Pending Review" value={pending} accent="#D97706" />
@@ -422,6 +695,8 @@ function Dashboard({ onLogout }) {
         {/* Footer count */}
         {!loading && !error && filtered.length > 0 && (
           <p className="list-count">Showing {filtered.length} of {total} enquiries</p>
+        )}
+          </>
         )}
       </div>
     </div>

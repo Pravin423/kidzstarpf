@@ -1,28 +1,21 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { Play, X, Volume2, VolumeX, Maximize2 } from "lucide-react";
+import { Play, X, Volume2, VolumeX, Maximize2, RefreshCw } from "lucide-react";
 import styles from "./VideoGallery.module.css";
 
-// ─── Video data — add more entries here as you upload videos ─────────────────
-const videos = [
+// Static fallback shown when DB has no videos yet
+const FALLBACK_VIDEOS = [
   {
-    id: 1,
-    src: "/homevideo.mp4",
+    _id: "fv1",
+    url: "/homevideo.mp4",
     title: "A Day at KidzStar",
-    description: "Watch the joy and learning that fills every moment at our preschool.",
-    tag: "Campus Life",
+    category: "Campus Life",
   },
-  // Add more videos like this:
-  // {
-  //   id: 2,
-  //   src: "/video2.mp4",
-  //   title: "Annual Sports Day",
-  //   description: "Our little stars show off their energy and teamwork!",
-  //   tag: "Events",
-  // },
 ];
+
+
 
 // ─── Video Card ───────────────────────────────────────────────────────────────
 function VideoCard({ video, onOpen, index }) {
@@ -60,7 +53,7 @@ function VideoCard({ video, onOpen, index }) {
       {/* Silent muted preview video on hover */}
       <video
         ref={previewRef}
-        src={video.src}
+        src={video.url}
         muted
         playsInline
         loop
@@ -78,9 +71,9 @@ function VideoCard({ video, onOpen, index }) {
 
       {/* Card info */}
       <div className={styles.cardInfo}>
-        <span className={styles.cardTag}>{video.tag}</span>
+        <span className={styles.cardTag}>{video.category || "Video"}</span>
         <h3 className={styles.cardTitle}>{video.title}</h3>
-        <p className={styles.cardDesc}>{video.description}</p>
+        {video.description && <p className={styles.cardDesc}>{video.description}</p>}
       </div>
 
       {/* Duration badge placeholder */}
@@ -145,7 +138,7 @@ function LightboxPlayer({ video, onClose }) {
 
         {/* Modal Header */}
         <div className={styles.modalHeader}>
-          <span className={styles.modalTag}>{video.tag}</span>
+          <span className={styles.modalTag}>{video.category || "Video"}</span>
           <h3 className={styles.modalTitle}>{video.title}</h3>
         </div>
 
@@ -153,7 +146,7 @@ function LightboxPlayer({ video, onClose }) {
         <div className={styles.modalPlayerWrap}>
           <video
             ref={videoRef}
-            src={video.src}
+            src={video.url}
             controls
             playsInline
             className={styles.modalPlayer}
@@ -192,30 +185,53 @@ function LightboxPlayer({ video, onClose }) {
 
 // ─── Main VideoGallery Section ─────────────────────────────────────────────────
 export default function VideoGallery() {
+  const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [activeVideo, setActiveVideo] = useState(null);
   const sectionRef = useRef(null);
+
+  const fetchVideos = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/media?type=video");
+      const data = await res.json();
+      if (data.success && data.data.length > 0) {
+        setVideos(data.data);
+      } else {
+        setVideos(FALLBACK_VIDEOS);
+      }
+    } catch {
+      setVideos(FALLBACK_VIDEOS);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchVideos();
+  }, [fetchVideos]);
 
   return (
     <>
       <section ref={sectionRef} className={styles.section} id="videos">
         <div className={styles.container}>
-          {/* Section Header */}
           <div className={styles.header}>
             <span className={styles.tag}>OUR VIDEOS</span>
-            <h2 className={styles.heading}>
-              See the magic in motion
-            </h2>
+            <h2 className={styles.heading}>See the magic in motion</h2>
             <p className={styles.subheading}>
               Experience the warmth, energy, and joy of KidzStar through our video memories.
             </p>
           </div>
 
-          {/* Video Grid */}
-          {videos.length > 0 ? (
+          {loading ? (
+            <div className={styles.emptyState}>
+              <RefreshCw size={32} color="#0504DC" className={styles.spin} />
+            </div>
+          ) : videos.length > 0 ? (
             <div className={styles.grid}>
               {videos.map((video, i) => (
                 <VideoCard
-                  key={video.id}
+                  key={video._id}
                   video={video}
                   index={i}
                   onOpen={setActiveVideo}
@@ -225,13 +241,12 @@ export default function VideoGallery() {
           ) : (
             <div className={styles.emptyState}>
               <Play size={40} color="#CBD5E1" />
-              <p>No videos yet. Add video files to the <code>/public</code> folder and update the videos list above.</p>
+              <p>No videos yet — admin can upload videos from the dashboard.</p>
             </div>
           )}
         </div>
       </section>
 
-      {/* Lightbox */}
       {activeVideo && (
         <LightboxPlayer video={activeVideo} onClose={() => setActiveVideo(null)} />
       )}
