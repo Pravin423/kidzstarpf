@@ -2,31 +2,56 @@
 
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
-import { Aperture, CircleDashed, Hexagon, Command, Eclipse, Fingerprint } from "lucide-react";
+import { 
+  BookOpen, 
+  Sun, 
+  Brain, 
+  GraduationCap, 
+  Sparkles, 
+  Lightbulb, 
+  Award, 
+  Compass, 
+  Smile, 
+  Heart, 
+  Star, 
+  Bookmark, 
+  Palette, 
+  Sprout, 
+  BadgeCheck 
+} from "lucide-react";
 
 const partners = [
-  { name: "Watchtower", icon: Aperture },
-  { name: "Radius", icon: Eclipse },
-  { name: "Ikigai Labs", icon: Hexagon },
-  { name: "Luminary", icon: CircleDashed },
-  { name: "Warpspeed", icon: Command },
-  { name: "Frame", icon: Fingerprint },
+  { name: "EarlyEd Foundations", icon: BookOpen },
+  { name: "Bright Start Educator Program", icon: Sun },
+  { name: "Little Minds Academy", icon: Brain },
+  { name: "Early Learning Essentials", icon: GraduationCap },
+  { name: "Future Kids Educator Course", icon: Sparkles },
+  { name: "Smart Start Teaching", icon: Lightbulb },
+  { name: "Early Childhood Pro", icon: Award },
+  { name: "KinderGrow Program", icon: Compass },
+  { name: "Tiny Steps Education", icon: Smile },
+  { name: "Play & Learn Educator Course", icon: Heart },
+  { name: "NextGen Early Educators", icon: Star },
+  { name: "Foundations in Preschool Education", icon: Bookmark },
+  { name: "Creative Kids Learning Program", icon: Palette },
+  { name: "Bloom Early Education", icon: Sprout },
+  { name: "Early Years Excellence", icon: BadgeCheck },
 ];
 
 const Card = ({ name, Icon }) => (
-  <div className="group relative flex items-center justify-center min-w-[260px] md:min-w-[320px] h-[110px] md:h-[140px] rounded-2xl md:rounded-[2rem] border border-black/5 bg-[#FDFCF9] hover:bg-[#8AF349] transition-colors duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer overflow-hidden shadow-[0px_4px_15px_rgba(0,0,0,0.03)] hover:shadow-md mr-6 md:mr-8">
+  <div className="group relative flex items-center justify-center min-w-[260px] md:min-w-[320px] h-[80px] md:h-[100px] rounded-xl md:rounded-[1.5rem] border border-black/5 bg-[#FDFCF9] hover:bg-[#8AF349] transition-colors duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer overflow-hidden shadow-[0px_4px_15px_rgba(0,0,0,0.03)] hover:shadow-md mr-6 md:mr-8">
     
-    <div className="h-8 md:h-9 overflow-hidden flex flex-col justify-start">
+    <div className="h-6 md:h-7 overflow-hidden flex flex-col justify-start">
       <div className="flex flex-col items-center transition-transform duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-1/2">
         
         {/* Normal Text */}
-        <span className="flex items-center gap-3 text-neutral-700 font-semibold text-xl md:text-2xl h-8 md:h-9">
-          <Icon className="w-6 h-6 md:w-7 md:h-7 stroke-[2.5]" /> {name}
+        <span className="flex items-center gap-3 text-neutral-700 font-semibold text-sm md:text-base h-6 md:h-7">
+          <Icon className="w-4 h-4 md:w-5 md:h-5 stroke-[2.5]" /> {name}
         </span>
         
         {/* Hover Text */}
-        <span className="flex items-center gap-3 text-neutral-900 font-semibold text-xl md:text-2xl h-8 md:h-9">
-          <Icon className="w-6 h-6 md:w-7 md:h-7 stroke-[2.5]" /> {name}
+        <span className="flex items-center gap-3 text-neutral-900 font-semibold text-sm md:text-base h-6 md:h-7">
+          <Icon className="w-4 h-4 md:w-5 md:h-5 stroke-[2.5]" /> {name}
         </span>
 
       </div>
