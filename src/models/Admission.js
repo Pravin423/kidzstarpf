@@ -34,6 +34,10 @@ const AdmissionSchema = new mongoose.Schema({
     type: String,
     maxlength: [500, "Notes cannot exceed 500 characters"],
   },
+  isChecked: {
+    type: Boolean,
+    default: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

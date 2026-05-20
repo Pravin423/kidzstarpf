@@ -65,18 +65,28 @@ export default function AdmissionModal() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setStatus({ submitting: true, success: false, error: null, mockMode: true });
+    setStatus({ submitting: true, success: false, error: null, mockMode: false });
 
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/admission", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Submission failed. Please try again.");
+      }
+
       setStatus({
         submitting: false,
         success: true,
         error: null,
-        mockMode: true,
+        mockMode: data.mode === "mock",
       });
-      // Reset form
       setFormData({
         parentName: "",
         childName: "",
@@ -86,8 +96,16 @@ export default function AdmissionModal() {
         program: "preschool",
         notes: "",
       });
-    }, 800);
+    } catch (err) {
+      setStatus({
+        submitting: false,
+        success: false,
+        error: err.message,
+        mockMode: false,
+      });
+    }
   };
+
 
   const handleClose = () => {
     // GSAP exit animation before closing
