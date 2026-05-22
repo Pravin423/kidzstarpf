@@ -271,6 +271,17 @@ function MediaManager() {
 
   const handleFileSelect = (file) => {
     if (!file) return;
+
+    // Vercel serverless function body size limit is 4.5MB (4.5 * 1024 * 1024 bytes)
+    const MAX_SIZE = 4.5 * 1024 * 1024;
+    if (file.size > MAX_SIZE) {
+      setUploadError(`File is too large (${(file.size / (1024 * 1024)).toFixed(2)} MB). Vercel limits uploads to 4.5 MB. Please select a smaller file.`);
+      setSelectedFile(null);
+      setPreview(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
     setSelectedFile(file);
     setUploadError("");
     setUploadSuccess("");
@@ -297,7 +308,18 @@ function MediaManager() {
     fd.append("category", uploadForm.category);
     try {
       const res = await fetch("/api/media", { method: "POST", body: fd });
-      const data = await res.json();
+      
+      if (res.status === 413) {
+        throw new Error("File is too large. Vercel limits file uploads to 4.5 MB. Please choose a smaller file.");
+      }
+
+      let data;
+      try {
+        data = await res.json();
+      } catch (jsonErr) {
+        throw new Error("Upload failed. The file size might exceed Vercel's 4.5 MB limit, or there was a server error.");
+      }
+
       if (!data.success) throw new Error(data.error || "Upload failed");
       setUploadSuccess(`✔ "${data.data.title}" uploaded successfully!`);
       setSelectedFile(null);
